@@ -15,8 +15,8 @@ import subprocess
 
 
 if not os.getuid() == 0:
-    print("You must run this file with admin privilege.")
-    print("Try sudo ./install.py")
+    print("Установку необходимо запустить с правами администратора.")
+    print("Попробуй sudo ./install.py")
     sys.exit(0)
 
 
@@ -26,43 +26,43 @@ class Install():
         try:
 #             from PyQt5 import QtGui
             if subprocess.call("python3 setup.py install --record ./.install_files.txt", shell=True) == 0:
-                    print("Installation finished.")
-                    print("Find multibootusb under system menu or run from terminal  using the following command...")
+                    print("Установка завершена")
+                    print("Найти программу можно в меню приложений или введя в терминале команду...")
                     print("\nmultibootusb\n")
-                    print("You can uninstall multibootusb at any time using follwing command (with root/sudo previlage)")
+                    print("Удалить программу можно в любой момент, введя команду в терминале (с правами sudo)")
                     print("\n./uninstall.sh\n")
         except:
-            print("Installing missing package.")
+            print("Установка недостающих пакетов.")
             if self.supported_pac_manager() is not True:
-                print("Unsupported package manager.")
-                print("Please install parted, util-linux and python3-pyqt5/PyQt5, mtools and python3-dbus\n"
+                print("Несовместимый менеджер пакетов.")
+                print("Необходимо установить parted, util-linux и python3-pyqt5/PyQt5, mtools и python3-dbus\n"
                       "Whatever the package name is applicable to your distro and rerun this script.")
                 sys.exit(0)
             elif self.internet_on() is False:
-                print("Unable to connect to internet.")
-                print("Please install parted, util-linux and python3-pyqt5/PyQt5, pkexec, mtools and python3-dbus \n"
+                print("Не удалось подключиться к сети.")
+                print("Необходимо установить parted, util-linux и python3-pyqt5/PyQt5, mtools и python3-dbuss \n"
                       "Whatever the package name is applicable to your distro and rerun this script.")
                 sys.exit(0)
             elif self.internet_on() is True:
                 if self.install_dependency_package() is not True:
-                    print("Error installing dependency packages.")
+                    print("Ошибка удовлетворения зависимостей.")
                 else:
                     if subprocess.call("python3 setup.py install --record ./.install_files.txt", shell=True) == 0:
-                        print("Installation finished.")
-                        print("Find multibootusb under system menu or run from terminal  using the following command...")
+                        print("Установка завершена.")
+                        print("Найти программу можно в меню приложений или введя в терминале команду...")
                         print("\nmultibootusb\n")
-                        print("You can uninstall multibootusb at any time using follwing command (with root/sudo previlage)")
+                        print("далить программу можно в любой момент, введя команду в терминале (с правами sudo)")
                         print("\nsudo ./uninstall.sh\n")
 
     @staticmethod
     def internet_on():
         try:
             ret = urllib.request.urlopen('https://www.google.com', timeout=1)
-            print("Interconnection exist.")
+            print("Соединение удалось.")
             result = True
 
         except urllib.error.URLError:
-            print("Interconnection does not exist.")
+            print("Соединение не удалось.")
             result = False
 
         return result
