@@ -11,8 +11,8 @@ import sys
 import shutil
 
 if not os.getuid() == 0:
-    print("You must run this file with admin privilege.")
-    print("Try sudo ./uninstall.py")
+    print("Запусти скрипт с правами администратора.")
+    print("Попробуй sudo ./uninstall.py")
     sys.exit(0)
 else:
     if os.path.exists("./.install_files.txt"):
@@ -27,7 +27,7 @@ else:
         if os.path.exists('/usr/share/multibootusb'):
             shutil.rmtree('/usr/share/multibootusb')
 
-        print("multibootusb is successfully unistalled...")
+        print("multibootusb полностью удалена...")
     else:
-        print("Unable to find install file list.")
-        print("This script works only if you have installed multibootusb using install.py script.")
+        print("Невозможно найти список установленных файлов.")
+        print("Этот скрипт сработает только если программа установлена с помощью скрипта install.py.")
