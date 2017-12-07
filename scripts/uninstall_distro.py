@@ -70,16 +70,16 @@ def delete_frm_file_list():
                     os.chmod(os.path.join(usb_mount, "ldlinux.sys"), 0o777)
                     os.unlink(os.path.join(usb_mount, "ldlinux.sys"))
                 except:
-                    gen.log('Could not remove ldlinux.sys')
+                    gen.log('Не получается удалить ldlinux.sys')
 
             if os.path.exists(os.path.join(usb_mount, f)):
 
                 if os.path.isdir(os.path.join(usb_mount, f)):
-                    gen.log("Removing directory " + (os.path.join(usb_mount, f)))
+                    gen.log("Удаление каталога " + (os.path.join(usb_mount, f)))
                     shutil.rmtree(os.path.join(usb_mount, f))
 
                 elif os.path.isfile(os.path.join(usb_mount, f)):
-                    gen.log("Removing file " + (os.path.join(usb_mount, f)))
+                    gen.log("Удаление файла " + (os.path.join(usb_mount, f)))
                     os.remove(os.path.join(usb_mount, f))
 
         if os.path.exists(os.path.join(usb_mount, "multibootusb", config.uninstall_distro_dir_name, "generic.cfg")):
@@ -91,8 +91,8 @@ def delete_frm_file_list():
                 if os.path.exists(os.path.join(usb_mount, generic.strip("/"))):
                     os.remove(os.path.join(usb_mount, generic.strip("/")))
     if platform.system() == 'Linux':
-        gen.log('Removed files from ' + config.uninstall_distro_dir_name)
-        gen.log('Syncing....')
+        gen.log('Удаление файлов из ' + config.uninstall_distro_dir_name)
+        gen.log('Синхронизация....')
         os.sync()
 
 
@@ -154,16 +154,16 @@ def uninstall_distro():
     # Check if bootx64.efi is replaced by distro
     efi_grub_img = os.path.join(config.usb_mount, 'EFI', 'BOOT', 'bootx64.efi')
     if not os.path.exists(efi_grub_img):
-        gen.log('EFI image does not exist. Copying now...')
+        gen.log('Образ EFI не обнаружен. Сейчас скопируем...')
         os.makedirs(os.path.join(config.usb_mount, 'EFI', 'BOOT'), exist_ok=True)
         shutil.copy2(gen.resource_path(os.path.join("data", "EFI", "BOOT", "bootx64.efi")),
                      os.path.join(config.usb_mount, 'EFI', 'BOOT'))
     elif not gen.grub_efi_exist(efi_grub_img):
-        gen.log('EFI image overwritten by distro install. Replacing it now...')
+        gen.log('Образ EFI перезаписан при установке дистрибутива. Заменяем...')
         shutil.copy2(gen.resource_path(os.path.join("data", "EFI", "BOOT", "bootx64.efi")),
                      os.path.join(config.usb_mount, 'EFI', 'BOOT'))
     else:
-        gen.log('multibootusb EFI image already exist. Not copying...')
+        gen.log('Обнаружен образ multibootusb EFI. Не копируем...')
 
 
 def update_sys_cfg_file():
@@ -178,7 +178,7 @@ def update_sys_cfg_file():
     if not os.path.exists(sys_cfg_file):
         gen.log("syslinux.cfg file not found for updating changes.")
     else:
-        gen.log("Updating syslinux.cfg file...")
+        gen.log("Обновление файла syslinux.cfg...")
         string = open(sys_cfg_file).read()
         string = re.sub(r'#start ' + config.uninstall_distro_dir_name + '.*?' + '#end ' + config.uninstall_distro_dir_name + '\s*', '', string, flags=re.DOTALL)
         config_file = open(sys_cfg_file, "w")
@@ -198,7 +198,7 @@ def update_grub_cfg_file():
     if not os.path.exists(grub_cfg_file):
         gen.log("grub.cfg file not found for updating changes.")
     else:
-        gen.log("Updating grub.cfg file...")
+        gen.log("обновление файла grub.cfg...")
         string = open(grub_cfg_file).read()
         string = re.sub(r'#start ' + config.uninstall_distro_dir_name + '.*?' + '#end ' + config.uninstall_distro_dir_name + '\s*', '', string, flags=re.DOTALL)
         config_file = open(grub_cfg_file, "w")
@@ -223,7 +223,7 @@ def uninstall_progress():
             config.distro = multibootusb_cfg.read().replace('\n', '')
     else:
         config.distro = ""
-    gen.log("Installed distro type is " +  config.distro)
+    gen.log("Тип установленного дистрибутива: " +  config.distro)
 
     if config.distro == "opensuse":
         if os.path.exists(os.path.join(usb_mount, config.uninstall_distro_dir_name) + ".iso"):
@@ -252,7 +252,7 @@ def uninstall_progress():
     thrd = threading.Thread(target=unin_distro, name="uninstall_progress")
     initial_usb_size = disk_usage(usb_mount).used
     thrd.start()
-    config.status_text = "Uninstalling " + config.uninstall_distro_dir_name
+    config.status_text = "Удаление " + config.uninstall_distro_dir_name
     pbar = progressbar.ProgressBar(maxval=100).start()  # bar = progressbar.ProgressBar(redirect_stdout=True)
     while thrd.is_alive():
         current_size = disk_usage(usb_mount).used
