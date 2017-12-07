@@ -228,7 +228,7 @@ def details_udev(usb_disk_part):
         vendor = ''
         model = ''
         label = ''
-        devtype = "расширенный раздел"
+        devtype = "Extented partition"
 
     elif device.get('DEVTYPE') == "partition":
         uuid = device.get('ID_FS_UUID') or ""
@@ -240,7 +240,7 @@ def details_udev(usb_disk_part):
         model = device.get('ID_MODEL') or ""
         devtype = "раздел"
 
-    elif device.get('DEVTYPE') == "диск":
+    elif device.get('DEVTYPE') == "Disk":
         mount_point = ""
         uuid = ""
         file_system = ""
@@ -249,7 +249,7 @@ def details_udev(usb_disk_part):
         model = device.get('ID_MODEL') or ""
         devtype = "disk"
 
-    if mount_point not in ["", "Нет"]:
+    if mount_point not in ["", "None"]:
         size_total = shutil.disk_usage(mount_point)[0]
         size_used = shutil.disk_usage(mount_point)[1]
         size_free = shutil.disk_usage(mount_point)[2]
