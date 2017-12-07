@@ -81,7 +81,7 @@ def disk_usage(mount_path):
 
         return _ntuple_diskusage(total.value, used, free.value)
     else:
-        raise NotImplementedError("Platform not supported.")
+        raise NotImplementedError("Платформа не поддерживается.")
 
 
 def list_devices(fixed=False):
@@ -93,11 +93,11 @@ def list_devices(fixed=False):
     if platform.system() == "Linux":
         try:
             # pyudev is good enough to detect USB devices on modern Linux machines.
-            gen.log("Using pyudev for detecting USB drives...")
+            gen.log("Используйте pyudev для определения USB дисков...")
             try:
                 import pyudev
             except Exception as e:
-                gen.log('PyUdev is not installed on host system, using built-in.')
+                gen.log('PyUdev не установлен на текущей системе, воспользуйтесь built-in.')
                 from . import pyudev
             context = pyudev.Context()
 
@@ -163,7 +163,7 @@ def list_devices(fixed=False):
                                 devices.append(device_file)
                 except Exception as e:
                     gen.log(e, error=True)
-                    gen.log("No USB device found...")
+                    gen.log("USB дисков не обнаружено...")
 
         devices.sort()
 
@@ -194,7 +194,7 @@ def list_devices(fixed=False):
     if devices:
         return devices
     else:
-        gen.log("No USB device found...")
+        gen.log("Устройств USB не обнаружено...")
         return None
 
 
@@ -216,7 +216,7 @@ def details_udev(usb_disk_part):
     try:
         device = pyudev.Device.from_device_file(context, usb_disk_part)
     except:
-        gen.log("ERROR: Unknown disk/partition (%s)" % str(usb_disk_part))
+        gen.log("ОШИБКА: неизвестный раздел/файловая система (%s)" % str(usb_disk_part))
         return None
 
     fdisk_cmd_out = subprocess.check_output('fdisk -l ' + usb_disk_part, shell=True)
@@ -228,7 +228,7 @@ def details_udev(usb_disk_part):
         vendor = ''
         model = ''
         label = ''
-        devtype = "extended partition"
+        devtype = "расширенный раздел"
 
     elif device.get('DEVTYPE') == "partition":
         uuid = device.get('ID_FS_UUID') or ""
@@ -238,9 +238,9 @@ def details_udev(usb_disk_part):
         mount_point = mount_point.replace('\\x20', ' ')
         vendor = device.get('ID_VENDOR') or ""
         model = device.get('ID_MODEL') or ""
-        devtype = "partition"
+        devtype = "раздел"
 
-    elif device.get('DEVTYPE') == "disk":
+    elif device.get('DEVTYPE') == "диск":
         mount_point = ""
         uuid = ""
         file_system = ""
@@ -249,7 +249,7 @@ def details_udev(usb_disk_part):
         model = device.get('ID_MODEL') or ""
         devtype = "disk"
 
-    if mount_point not in ["", "None"]:
+    if mount_point not in ["", "Нет"]:
         size_total = shutil.disk_usage(mount_point)[0]
         size_used = shutil.disk_usage(mount_point)[1]
         size_free = shutil.disk_usage(mount_point)[2]
@@ -301,7 +301,7 @@ def details_udisks2(usb_disk_part):
         model = bd1.Get('org.freedesktop.UDisks2.Drive', 'Model', dbus_interface='org.freedesktop.DBus.Properties')
     except:
         model = str('No_Model')
-    if not mount_point == "No_Mount":
+    if not mount_point == "Не примонтирован":
             size_total = shutil.disk_usage(mount_point)[0]
             size_used = shutil.disk_usage(mount_point)[1]
             size_free = shutil.disk_usage(mount_point)[2]
@@ -351,9 +351,9 @@ def win_disk_details(disk_drive):
     d = oFS.GetDrive(oFS.GetDriveName(oFS.GetAbsolutePathName(selected_usb_part)))
     selected_usb_device = d.DriveLetter
     if d.DriveType == 1:
-        devtype = "Removable Disk"
+        devtype = "Сменный диск"
     elif d.DriveType == 2:
-        devtype = "Fixed Disk"
+        devtype = "Постоянный диск"
     label = (d.VolumeName).strip()
     if not label.strip():
         label = "No_label"
